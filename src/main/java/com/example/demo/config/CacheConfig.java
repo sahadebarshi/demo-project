@@ -34,6 +34,7 @@ public class CacheConfig {
     public org.springframework.cache.CacheManager cacheManager()
     {
         cacheManager = getInMemCacheManager();
+        log.info("CACHE MANAGE OBJECT----> "+cacheManager);
         return new JCacheCacheManager(cacheManager);
     }
 
