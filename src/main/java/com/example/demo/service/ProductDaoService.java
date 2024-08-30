@@ -7,4 +7,5 @@ import java.util.List;
 public interface ProductDaoService {
 
     public List<Product> getProductList();
+    public List<Product> getProductListOld(String productId);
 }
