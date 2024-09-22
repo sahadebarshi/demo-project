@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.service.ConfigService;
 import com.example.demo.service.ProductDaoService;
+import com.example.demo.service.SalesDaoService;
 import com.example.demo.util.EncoderDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class DataController {
     ConfigService configService;
     @Autowired
     ProductDaoService productDaoService;
+    @Autowired
+    SalesDaoService salesDaoService;
 
     @GetMapping(path = "/ping")
     public String pingMethod()
@@ -38,9 +41,15 @@ public class DataController {
     @GetMapping(path = "/product")
     public String getProduct()
     {
-
         //productDaoService.getProductList();
         return productDaoService.getProductList().get(0).getProduct_name();
+    }
+
+    @GetMapping(path = "/sales")
+    public Integer getSalesDetails()
+    {
+        log.info("PRICE OF SOLD ITEM FETCHED.......");
+        return salesDaoService.getSalesDetails().get(0).getPrice();
     }
 
     @GetMapping(path = "/old/{productId}")
