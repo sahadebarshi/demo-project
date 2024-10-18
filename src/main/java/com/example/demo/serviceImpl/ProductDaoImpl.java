@@ -77,7 +77,7 @@ public class ProductDaoImpl implements ProductDaoService {
     @Override
     public List<Product> getProductListOld(String productId) {
         log.info("FETCH THE PRODUCT LIST OLD..... {}",productId);
-
+        log.info("TRANSACTION STATUS --> {}",hibernateTemplate.getSessionFactory().getCurrentSession().getTransaction().isActive());
         boolean a = Pattern.compile("(^\\p{Punct})|(\\p{Punct}$)").matcher(productId).find();
         if(a) {
             log.info("PROFILE ID MUST NOT CONTAINS SPECIAL CHARACTER AT BEGINNING OR END ----> " + productId);
