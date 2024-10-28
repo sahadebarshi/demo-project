@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.data.ProductDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.FluentProducerTemplate;
@@ -13,6 +14,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @RestController
@@ -36,12 +40,27 @@ public class RouteController {
         return "OK..";
     }
 
-    //, produces = {"application/json"}
-    @GetMapping(path = "/test")
+    @GetMapping(path = "/test", produces = MediaType.APPLICATION_JSON)
     public String getTestData()
     {
+        ExecutorService threadPool = Executors.newFixedThreadPool(4);
+        CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(()->{
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("HI THREAD 1");
+        }, threadPool).thenRun(()->{
+            log.info("HI THREAD 2");
+        });
+        if(completableFuture.isDone()) {
+            log.info("CompletableFuture THREAD is executed.....");
+            completableFuture.join();
+        }
         log.info("REQUEST RECEIVED AT test CONTROLLER..........");
-        return "{'status' : 'OK' }";
+        String msg = "Task executed.";
+        return "{ \"Status\" : \"OK\", \"Message\" : \""+msg+"\" }";
     }
 
     @PostMapping(path ="/product", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
