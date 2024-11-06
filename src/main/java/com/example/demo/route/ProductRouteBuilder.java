@@ -31,8 +31,14 @@ public class ProductRouteBuilder extends RouteBuilder {
                           }
                         ).convertBodyTo(String.class)
                 
-                .to("http://localhost:8081/bk/home/product")
-                    .log("Route msg received!!!  ${body}");
+                .to("http://localhost:8080/bk/home/product")
+                    //.log("Route msg received!!!  ${body}");
+                .process(exchange->{
+                    // Capture the response
+                    String response = exchange.getIn().getBody(String.class);
+                    // Set the response back to the exchange body
+                    exchange.getIn().setBody(response);
+                });
                 
 
     }
